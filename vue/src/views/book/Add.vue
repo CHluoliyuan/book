@@ -39,7 +39,7 @@
       <el-form-item label="封面" prop="cover">
         <el-upload
             class="avatar-uploader"
-            :action="'http://localhost:8000/bookimgup?token=' + this.admin.token"
+            :action="'http://47.108.85.66/api/bookimgup?token=' + this.admin.token"
             :show-file-list="false"
             :on-success="handleCoverSuccess">
           <img v-if="form.cover" :src="'http://47.108.85.66/api/'+form.cover" class="avatar" alt="">
