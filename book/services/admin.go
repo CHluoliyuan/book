@@ -94,6 +94,7 @@ func Register(c *gin.Context) {
 			"code": -1,
 			"msg":  "get user error:" + err.Error(),
 		})
+		return
 	}
 	if cnt > 0 {
 		c.JSON(http.StatusOK, gin.H{
@@ -118,6 +119,7 @@ func Register(c *gin.Context) {
 			"code": -1,
 			"msg":  "验证码错误",
 		})
+		return
 	}
 
 	//数据插入
