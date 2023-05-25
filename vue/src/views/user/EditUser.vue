@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     save() {
+      delete this.form.Books;
       request.put('/user_update', this.form).then(res => {
         if (res.code === '200') {
           this.$notify.success('更新成功')

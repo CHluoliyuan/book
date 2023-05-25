@@ -99,7 +99,7 @@ export default {
       }
     },
     save() {
-      console.log(this.form)
+      delete this.form.Users;
       request.put('/book_update', this.form).then(res => {
         if (res.code === '200') {
           this.$notify.success('更新成功')
