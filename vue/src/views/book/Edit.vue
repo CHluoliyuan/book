@@ -42,7 +42,7 @@
             :action="'http://localhost:8000/bookimgup?token=' + this.admin.token"
             :show-file-list="false"
             :on-success="handleCoverSuccess">
-          <img v-if="form.cover" :src="'http://localhost:8000/'+form.cover" class="avatar" alt="">
+          <img v-if="form.cover" :src="'http://47.108.85.66/api/'+form.cover" class="avatar" alt="">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
