@@ -31,7 +31,7 @@
       <el-table-column prop="nums" label="数量"></el-table-column>
       <el-table-column prop="cover" label="封面">
         <template v-slot="scope">
-          <el-image :src="'http://localhost:8000/'+scope.row.cover" :preview-src-list="['http://localhost:8000/'+scope.row.cover]"></el-image>
+          <el-image :src="'http://47.108.85.66/api/'+scope.row.cover" :preview-src-list="['http://47.108.85.66/api/'+scope.row.cover]"></el-image>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="140">
