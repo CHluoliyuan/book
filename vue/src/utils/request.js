@@ -3,7 +3,7 @@ import router from "@/router";
 import Cookies from 'js-cookie'
 
 const request = axios.create({
-    baseURL: 'http://47.108.85.66:8000/api/',
+    baseURL: 'http://127.0.0.1:8000/api/',
     timeout: 5000
 })
 
