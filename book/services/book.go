@@ -16,12 +16,13 @@ import (
 // @Param token query string true "token"
 // @Param file formData string true "file"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/bookimgup [post]
+// @Router /bookimgup [post]
 func CoverPhotoUp(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	token := c.Query("token")
 	userClaim, err := utils.AnalyseToken(token)
 	if err != nil {
-		c.Abort()
+		utils.Log.Errorln("analyse token error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": http.StatusUnauthorized,
 			"msg":  "未认证:Unauthorized Authorization",
@@ -29,26 +30,28 @@ func CoverPhotoUp(c *gin.Context) {
 		return
 	}
 	if userClaim == nil {
-		c.Abort()
+		utils.Log.Infoln("unauthor admin")
 		c.JSON(http.StatusOK, gin.H{
 			"code": http.StatusUnauthorized,
 			"msg":  "用户无权限:Unauthorized Admin",
 		})
 		return
 	}
-
+	utils.Log.Infoln("uping file")
 	// 单文件
 	file, _ := c.FormFile("file")
 	dst := "./imgs/" + utils.GetUUID() + file.Filename
 	// 上传文件至指定的完整文件路径
 	err = c.SaveUploadedFile(file, dst)
 	if err != nil {
+		utils.Log.Infoln("up file error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "save error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("return")
 	c.JSON(200, gin.H{
 		"code": "200",
 		"data": dst,
@@ -69,25 +72,30 @@ func CoverPhotoUp(c *gin.Context) {
 // @Param category_id formData string true "category_id"
 // @Param cover formData string true "cover"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/book_create [post]
+// @Router /book_create [post]
 func BookCreate(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.Book
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Infoln("bind error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("getting data")
 	err = models.DB.Model(new(models.Book)).Create(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "create error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("return")
 	c.JSON(200, gin.H{
 		"code": "200",
 		"msg":  "创建成功",
@@ -102,8 +110,9 @@ func BookCreate(c *gin.Context) {
 // @Param name query string false "name"
 // @Param id query string false "id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/book_list [get]
+// @Router /book_list [get]
 func GetBookList(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	type _param struct {
 		Size   string `form:"size" json:"size"`
 		Page   string `form:"page" json:"page"`
@@ -116,6 +125,7 @@ func GetBookList(c *gin.Context) {
 	}
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "bind error" + err.Error(),
@@ -126,16 +136,19 @@ func GetBookList(c *gin.Context) {
 	size, _ := strconv.Atoi(data.Size)
 	page = (page - 1) * size
 	var count int64
+
+	utils.Log.Infoln("getting data")
 	tx := models.GetBookList(data.Name, data.BookNo)
 	err = tx.Count(&count).Offset(page).Limit(size).Find(&list).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "find data error" + err.Error(),
 		})
 		return
 	}
-
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": map[string]interface{}{
@@ -150,19 +163,23 @@ func GetBookList(c *gin.Context) {
 // @Summary 图书详细
 // @Param id query string true "id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/book_detail [get]
+// @Router /book_detail [get]
 func GetBookDetail(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.Book
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("getting data")
 	err = models.DB.Where("id=?", data.ID).First(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -176,6 +193,8 @@ func GetBookDetail(c *gin.Context) {
 		})
 		return
 	}
+
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": data,
@@ -187,19 +206,23 @@ func GetBookDetail(c *gin.Context) {
 // @Summary 图书删除
 // @Param id query string true "id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/book_delete [delete]
+// @Router /book_delete [delete]
 func BookDelete(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.Book
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("getting data")
 	err = models.DB.Where("id=?", data.ID).First(&data).Delete(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -213,6 +236,8 @@ func BookDelete(c *gin.Context) {
 		})
 		return
 	}
+
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"msg":  "删除成功",
@@ -234,25 +259,30 @@ func BookDelete(c *gin.Context) {
 // @Param category_id formData string false "category_id"
 // @Param cover formData string false "cover"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/book_update [put]
+// @Router /book_update [put]
 func BookUpdate(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.Book
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("getting data")
 	err = models.DB.Model(new(models.Book)).Where("id=?", data.ID).Updates(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "update error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"msg":  "修改成功",

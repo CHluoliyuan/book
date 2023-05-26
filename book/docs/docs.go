@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/admin_list": {
+        "/admin_list": {
             "get": {
                 "tags": [
                     "管理员方法"
@@ -64,7 +64,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/book_create": {
+        "/book_create": {
             "post": {
                 "tags": [
                     "图书方法"
@@ -152,7 +152,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/book_delete": {
+        "/book_delete": {
             "delete": {
                 "tags": [
                     "图书方法"
@@ -177,7 +177,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/book_detail": {
+        "/book_detail": {
             "get": {
                 "tags": [
                     "图书方法"
@@ -202,7 +202,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/book_list": {
+        "/book_list": {
             "get": {
                 "tags": [
                     "图书方法"
@@ -244,7 +244,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/book_update": {
+        "/book_update": {
             "put": {
                 "tags": [
                     "图书方法"
@@ -329,7 +329,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/bookimgup": {
+        "/bookimgup": {
             "post": {
                 "tags": [
                     "图书方法"
@@ -361,7 +361,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/borrow_create": {
+        "/borrow_create": {
             "post": {
                 "tags": [
                     "借书方法"
@@ -400,7 +400,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/borrow_delete": {
+        "/borrow_delete": {
             "delete": {
                 "tags": [
                     "借书方法"
@@ -425,7 +425,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/borrow_list": {
+        "/borrow_list": {
             "get": {
                 "tags": [
                     "借书方法"
@@ -473,7 +473,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category_create": {
+        "/category_create": {
             "post": {
                 "tags": [
                     "分类方法"
@@ -504,7 +504,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category_delete": {
+        "/category_delete": {
             "delete": {
                 "tags": [
                     "分类方法"
@@ -529,7 +529,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category_detail": {
+        "/category_detail": {
             "get": {
                 "tags": [
                     "分类方法"
@@ -554,7 +554,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category_list": {
+        "/category_list": {
             "get": {
                 "tags": [
                     "分类方法"
@@ -590,7 +590,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/category_update": {
+        "/category_update": {
             "put": {
                 "tags": [
                     "分类方法"
@@ -627,7 +627,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/code": {
+        "/code": {
             "post": {
                 "tags": [
                     "管理员方法"
@@ -651,7 +651,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/echart_data": {
+        "/echart_data": {
             "get": {
                 "tags": [
                     "echarts数据"
@@ -667,7 +667,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/login": {
+        "/login": {
             "post": {
                 "tags": [
                     "管理员方法"
@@ -697,7 +697,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/register": {
+        "/register": {
             "post": {
                 "tags": [
                     "管理员方法"
@@ -756,7 +756,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/retur_create": {
+        "/retur_create": {
             "post": {
                 "tags": [
                     "还书方法"
@@ -816,7 +816,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/retur_delete": {
+        "/retur_delete": {
             "delete": {
                 "tags": [
                     "还书方法"
@@ -841,7 +841,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/retur_list": {
+        "/retur_list": {
             "get": {
                 "tags": [
                     "还书方法"
@@ -889,7 +889,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user_account": {
+        "/user_account": {
             "post": {
                 "tags": [
                     "用户方法"
@@ -921,7 +921,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user_create": {
+        "/user_create": {
             "post": {
                 "tags": [
                     "用户方法"
@@ -973,7 +973,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user_delete": {
+        "/user_delete": {
             "delete": {
                 "tags": [
                     "用户方法"
@@ -998,7 +998,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user_detail": {
+        "/user_detail": {
             "get": {
                 "tags": [
                     "用户方法"
@@ -1023,7 +1023,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user_list": {
+        "/user_list": {
             "get": {
                 "tags": [
                     "用户方法"
@@ -1065,7 +1065,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/user_update": {
+        "/user_update": {
             "put": {
                 "tags": [
                     "用户方法"

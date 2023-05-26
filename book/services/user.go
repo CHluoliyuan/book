@@ -3,6 +3,7 @@ package services
 import (
 	"book/config"
 	"book/models"
+	"book/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -18,25 +19,33 @@ import (
 // @Param phone formData string false "phone"
 // @Param address formData string true "address"
 // @Success 200 {string} json "{"code":"200","msg":""}"
-// @Router /api/user_create [post]
+// @Router /user_create [post]
 func UserCreate(c *gin.Context) {
+
+	utils.Log.Infoln("enter")
 	var data models.User
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+
+	utils.Log.Infoln("getting data")
 	err = models.DB.Model(new(models.User)).Create(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "create error" + err.Error(),
 		})
 		return
 	}
+
+	utils.Log.Infoln("return")
 	c.JSON(200, gin.H{
 		"code": "200",
 		"msg":  "创建成功",
@@ -51,8 +60,10 @@ func UserCreate(c *gin.Context) {
 // @Param name query string false "name"
 // @Param phone query string false "phone"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/user_list [get]
+// @Router /user_list [get]
 func GetUserList(c *gin.Context) {
+
+	utils.Log.Infoln("enter")
 	type _param struct {
 		Size  string `form:"size" json:"size"`
 		Page  string `form:"page" json:"page"`
@@ -63,8 +74,10 @@ func GetUserList(c *gin.Context) {
 		Size: config.DefaultSize,
 		Page: config.DefaultPage,
 	}
+
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "bind error" + err.Error(),
@@ -75,9 +88,11 @@ func GetUserList(c *gin.Context) {
 	size, _ := strconv.Atoi(data.Size)
 	page = (page - 1) * size
 	var count int64
+	utils.Log.Infoln("getting data")
 	tx := models.GetUserList(data.Phone, data.Name)
 	err = tx.Count(&count).Offset(page).Limit(size).Find(&list).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "find data error" + err.Error(),
@@ -85,6 +100,7 @@ func GetUserList(c *gin.Context) {
 		return
 	}
 
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": map[string]interface{}{
@@ -100,8 +116,10 @@ func GetUserList(c *gin.Context) {
 // @Param id formData string true "id"
 // @Param score formData int true "score"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/user_account [post]
+// @Router /user_account [post]
 func UserAccount(c *gin.Context) {
+
+	utils.Log.Infoln("enter")
 	var data models.User
 	err := c.ShouldBind(&data)
 	type params struct {
@@ -110,6 +128,7 @@ func UserAccount(c *gin.Context) {
 	var param_data params
 	err = c.ShouldBind(&param_data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
@@ -118,8 +137,15 @@ func UserAccount(c *gin.Context) {
 	}
 	score := param_data.Score
 
-	err = models.DB.Where("id=?", data.ID).First(&data).Error
+	utils.Log.Infoln("getting data")
+	tx := models.DB.Begin()
+	err = tx.Where("id=?", data.ID).First(&data).Error
+
+	data.Account = data.Account + score
+	err = tx.Save(data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
+		tx.Rollback()
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -133,15 +159,9 @@ func UserAccount(c *gin.Context) {
 		})
 		return
 	}
-	data.Account = data.Account + score
-	err = models.DB.Save(data).Error
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code": -1,
-			"msg":  "Get Detail Error:" + err.Error(),
-		})
-		return
-	}
+	tx.Commit()
+
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": data,
@@ -153,19 +173,25 @@ func UserAccount(c *gin.Context) {
 // @Summary 用户详细
 // @Param id query string true "id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/user_detail [get]
+// @Router /user_detail [get]
 func GetUserDetail(c *gin.Context) {
+
+	utils.Log.Infoln("enter")
 	var data models.User
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+
+	utils.Log.Infoln("getting data")
 	err = models.DB.Where("id=?", data.ID).First(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -179,6 +205,8 @@ func GetUserDetail(c *gin.Context) {
 		})
 		return
 	}
+
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": data,
@@ -190,19 +218,24 @@ func GetUserDetail(c *gin.Context) {
 // @Summary 用户删除
 // @Param id query string true "id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/user_delete [delete]
+// @Router /user_delete [delete]
 func UserDelete(c *gin.Context) {
+
+	utils.Log.Infoln("enter")
 	var data models.User
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("getting data")
 	err = models.DB.Where("id=?", data.ID).First(&data).Delete(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -216,6 +249,7 @@ func UserDelete(c *gin.Context) {
 		})
 		return
 	}
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"msg":  "删除成功",
@@ -231,11 +265,13 @@ func UserDelete(c *gin.Context) {
 // @Param address formData string false "address"
 // @Param sex formData string false "sex"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/user_update [put]
+// @Router /user_update [put]
 func UserUpdate(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.User
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
@@ -244,12 +280,14 @@ func UserUpdate(c *gin.Context) {
 	}
 	err = models.DB.Model(new(models.User)).Where("id=?", data.ID).Updates(&data).Error
 	if err != nil {
+		utils.Log.Errorln("find data error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "update error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"msg":  "修改成功",

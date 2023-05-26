@@ -3,6 +3,7 @@ package services
 import (
 	"book/config"
 	"book/models"
+	"book/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -19,32 +20,40 @@ import (
 // @Param return_date formData string true "return_date"
 // @Param created_at formData string true "created_at"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/retur_create [post]
+// @Router /retur_create [post]
 func ReturCreate(c *gin.Context) {
+
+	utils.Log.Infoln("enter")
 	var retur models.Retur
 	err := c.ShouldBind(&retur)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+
 	book_id := retur.BookID
 	borrow_id := retur.ID //传递当前要还的书的id
 	retur.ID = 0
 	retur.Books = nil
 	retur.Users = nil
+	retur.ReturnDate = retur.ReturnDate[:10]
 
+	utils.Log.Infoln("getting data")
 	tx := models.DB.Begin()
 	var book models.Book
-	tx.Where("id=?", book_id).First(&book)
+	err = tx.Where("id=?", book_id).First(&book).Error
 	book.Nums += 1
-	tx.Updates(&book)
-	tx.Where("id=?", borrow_id).First(new(models.Borrow)).Select("note").Update("note", "已归还")
-	tx.Model(new(models.Retur)).Create(&retur)
-	err = tx.Commit().Error
+	book.PublishDate = book.PublishDate[:10]
+	err = tx.Updates(&book).Error
+	err = tx.Where("id=?", borrow_id).First(new(models.Borrow)).Select("note").Update("note", "已归还").Error
+	err = tx.Model(new(models.Retur)).Create(&retur).Error
 	if err != nil {
+		utils.Log.Warning("get data error")
+		tx.Rollback()
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -58,6 +67,9 @@ func ReturCreate(c *gin.Context) {
 		})
 		return
 	}
+	tx.Commit()
+
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"msg":  "归还成功",
@@ -73,8 +85,9 @@ func ReturCreate(c *gin.Context) {
 // @Param book_name query string false "book_name"
 // @Param book_id query string false "book_id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/retur_list [get]
+// @Router /retur_list [get]
 func GetReturList(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	type _param struct {
 		Size     string `form:"size" json:"size"`
 		Page     string `form:"page" json:"page"`
@@ -88,6 +101,7 @@ func GetReturList(c *gin.Context) {
 	}
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "bind error" + err.Error(),
@@ -98,9 +112,12 @@ func GetReturList(c *gin.Context) {
 	size, _ := strconv.Atoi(data.Size)
 	page = (page - 1) * size
 	var count int64
+
+	utils.Log.Infoln("getting data")
 	tx := models.GetReturList(data.UserName, data.BookName, data.BookID)
 	err = tx.Count(&count).Offset(page).Limit(size).Find(&list).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "find data error" + err.Error(),
@@ -108,6 +125,7 @@ func GetReturList(c *gin.Context) {
 		return
 	}
 
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": map[string]interface{}{
@@ -122,19 +140,24 @@ func GetReturList(c *gin.Context) {
 // @Summary 还书删除
 // @Param id query string true "id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/retur_delete [delete]
+// @Router /retur_delete [delete]
 func ReturDelete(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.Retur
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+
+	utils.Log.Infoln("getting data")
 	err = models.DB.Where("id=?", data.ID).First(&data).Delete(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -148,6 +171,8 @@ func ReturDelete(c *gin.Context) {
 		})
 		return
 	}
+
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"msg":  "删除成功",

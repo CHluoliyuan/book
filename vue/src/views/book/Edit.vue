@@ -100,6 +100,7 @@ export default {
     },
     save() {
       delete this.form.Users;
+      this.form.category_id=this.form.category_id[0]
       request.put('/book_update', this.form).then(res => {
         if (res.code === '200') {
           this.$notify.success('更新成功')

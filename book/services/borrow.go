@@ -3,6 +3,7 @@ package services
 import (
 	"book/config"
 	"book/models"
+	"book/utils"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -17,8 +18,9 @@ import (
 // @Param user_id formData string true "user_id"
 // @Param days formData string true "days"
 // @Success 200 {string} json "{"code":"200","msg":""}"
-// @Router /api/borrow_create [post]
+// @Router /borrow_create [post]
 func BorrowCreate(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.Borrow
 	err := c.ShouldBind(&data)
 	if err != nil {
@@ -34,13 +36,16 @@ func BorrowCreate(c *gin.Context) {
 	data.Users = nil
 	data.Note = "外租中"
 	data.ReturnDate = time.Now().AddDate(0, 0, data.Days).Format("2006-01-02 15:04:05")
+	utils.Log.Infoln("getting data")
 	tx := models.DB.Begin()
 	err = tx.Model(new(models.Borrow)).Create(&data).Error
 
 	var book models.Book
-	tx.Where("id=?", book_id).First(&book)
+	err = tx.Where("id=?", book_id).First(&book).Error
 	book.Nums = book.Nums - 1
+	book.PublishDate = book.PublishDate[:10]
 	if book.Nums < 0 {
+		utils.Log.Errorln("get data error")
 		tx.Rollback()
 		c.JSON(200, gin.H{
 			"code": -1,
@@ -49,9 +54,10 @@ func BorrowCreate(c *gin.Context) {
 		return
 	}
 	var user models.User
-	tx.Where("id=?", user_id).First(&user)
+	err = tx.Where("id=?", user_id).First(&user).Error
 	user.Account = user.Account - book.Score
 	if user.Account < 0 {
+		utils.Log.Errorln("get data error")
 		tx.Rollback()
 		c.JSON(200, gin.H{
 			"code": -1,
@@ -59,9 +65,10 @@ func BorrowCreate(c *gin.Context) {
 		})
 		return
 	}
-	tx.Updates(&user)
-	tx.Updates(&book)
+	err = tx.Updates(&user).Error
+	err = tx.Updates(&book).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		tx.Rollback()
 		c.JSON(200, gin.H{
 			"code": -1,
@@ -71,6 +78,7 @@ func BorrowCreate(c *gin.Context) {
 	}
 
 	tx.Commit()
+	utils.Log.Infoln("return")
 	c.JSON(200, gin.H{
 		"code": "200",
 		"msg":  "创建成功",
@@ -87,8 +95,9 @@ func BorrowCreate(c *gin.Context) {
 // @Param book_name query string false "book_name"
 // @Param book_id query string false "book_id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/borrow_list [get]
+// @Router /borrow_list [get]
 func GetBorrowList(c *gin.Context) {
+	utils.Log.Infoln("info")
 	type _param struct {
 		Size     string `form:"size" json:"size"`
 		Page     string `form:"page" json:"page"`
@@ -102,6 +111,7 @@ func GetBorrowList(c *gin.Context) {
 	}
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "bind error" + err.Error(),
@@ -112,9 +122,12 @@ func GetBorrowList(c *gin.Context) {
 	size, _ := strconv.Atoi(data.Size)
 	page = (page - 1) * size
 	var count int64
+
+	utils.Log.Infoln("getting data")
 	tx := models.GetBorrowList(data.UserName, data.BookName, data.BookID)
 	err = tx.Count(&count).Offset(page).Limit(size).Find(&list).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		c.JSON(200, gin.H{
 			"code": -1,
 			"msg":  "find data error" + err.Error(),
@@ -122,6 +135,7 @@ func GetBorrowList(c *gin.Context) {
 		return
 	}
 
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": map[string]interface{}{
@@ -136,19 +150,23 @@ func GetBorrowList(c *gin.Context) {
 // @Summary 借书删除
 // @Param id query string true "id"
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/borrow_delete [delete]
+// @Router /borrow_delete [delete]
 func BorrowDelete(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	var data models.Borrow
 	err := c.ShouldBind(&data)
 	if err != nil {
+		utils.Log.Errorln("bind error")
 		c.JSON(http.StatusOK, gin.H{
 			"code": "-1",
 			"msg":  "bind error" + err.Error(),
 		})
 		return
 	}
+	utils.Log.Infoln("getting data")
 	err = models.DB.Where("id=?", data.ID).First(&data).Delete(&data).Error
 	if err != nil {
+		utils.Log.Errorln("get data error")
 		if err == gorm.ErrRecordNotFound {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
@@ -162,6 +180,7 @@ func BorrowDelete(c *gin.Context) {
 		})
 		return
 	}
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"msg":  "删除成功",

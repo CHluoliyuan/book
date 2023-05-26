@@ -2,6 +2,7 @@ package services
 
 import (
 	"book/models"
+	"book/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -10,17 +11,21 @@ import (
 // @Tags echarts数据
 // @Summary echarts数据
 // @Success 200 {string} json "{"code":"200","data":""}"
-// @Router /api/echart_data [get]
+// @Router /echart_data [get]
 func EchartsData(c *gin.Context) {
+	utils.Log.Infoln("enter")
 	//timeRange := c.Param("timeRange")
 	type BorrowResult struct {
 		CategoryID uint   `json:"category_id"`
 		Count      string `json:"count"`
 	}
 
+	utils.Log.Infoln("getting data")
+	tx := models.DB.Begin()
 	var borrow_result []BorrowResult
-	models.DB.Table("borrows").Select("books.category_id, count(*) as count").
-		Joins("join books on books.id = borrows.book_id").Group("books.category_id").Find(&borrow_result)
+	err := tx.Table("borrows").Select("books.category_id, count(*) as count").
+		Joins("join books on books.id = borrows.book_id").Group("books.category_id").
+		Find(&borrow_result).Error
 
 	type ReturResult struct {
 		CategoryID uint   `json:"category_id"`
@@ -28,11 +33,22 @@ func EchartsData(c *gin.Context) {
 	}
 
 	var retur_result []ReturResult
-	models.DB.Table("returs").Select("books.category_id, count(*) as count").
-		Joins("join books on books.id = returs.book_id").Group("books.category_id").Find(&retur_result)
+	err = tx.Table("returs").Select("books.category_id, count(*) as count").
+		Joins("join books on books.id = returs.book_id").Group("books.category_id").
+		Find(&retur_result).Error
 
 	var categories []models.Category
-	err := models.DB.Model(new(models.Category)).Select("id", "name").Find(&categories).Error
+	err = tx.Model(new(models.Category)).Select("id", "name").Find(&categories).Error
+
+	if err != nil {
+		utils.Log.Warning("get data error")
+		tx.Rollback()
+		c.JSON(200, gin.H{
+			"code": -1,
+			"msg":  "find category error:" + err.Error(),
+		})
+		return
+	}
 
 	data := make(map[uint][]string, len(categories))
 	for _, v := range categories {
@@ -60,14 +76,8 @@ func EchartsData(c *gin.Context) {
 	for key, value := range data {
 		jsonData[key] = value
 	}
-	if err != nil {
-		c.JSON(200, gin.H{
-			"code": -1,
-			"msg":  "find category error:" + err.Error(),
-		})
-		return
-	}
 
+	utils.Log.Infoln("return")
 	c.JSON(http.StatusOK, gin.H{
 		"code": "200",
 		"data": jsonData,

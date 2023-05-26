@@ -1,7 +1,7 @@
 info:
   contact: {}
 paths:
-  /api/admin_list:
+  /admin_list:
     get:
       parameters:
       - description: page
@@ -32,7 +32,7 @@ paths:
       summary: 管理员列表
       tags:
       - 管理员方法
-  /api/book_create:
+  /book_create:
     post:
       parameters:
       - description: name
@@ -93,7 +93,7 @@ paths:
       summary: 图书创建
       tags:
       - 图书方法
-  /api/book_delete:
+  /book_delete:
     delete:
       parameters:
       - description: id
@@ -109,7 +109,7 @@ paths:
       summary: 图书删除
       tags:
       - 图书方法
-  /api/book_detail:
+  /book_detail:
     get:
       parameters:
       - description: id
@@ -125,7 +125,7 @@ paths:
       summary: 图书详细
       tags:
       - 图书方法
-  /api/book_list:
+  /book_list:
     get:
       parameters:
       - description: page
@@ -152,7 +152,7 @@ paths:
       summary: 图书列表
       tags:
       - 图书方法
-  /api/book_update:
+  /book_update:
     put:
       parameters:
       - description: id
@@ -208,7 +208,7 @@ paths:
       summary: 图书修改
       tags:
       - 图书方法
-  /api/bookimgup:
+  /bookimgup:
     post:
       parameters:
       - description: token
@@ -229,7 +229,7 @@ paths:
       summary: 头像上传
       tags:
       - 图书方法
-  /api/borrow_create:
+  /borrow_create:
     post:
       parameters:
       - description: book_id
@@ -255,7 +255,7 @@ paths:
       summary: 新建借书
       tags:
       - 借书方法
-  /api/borrow_delete:
+  /borrow_delete:
     delete:
       parameters:
       - description: id
@@ -271,7 +271,7 @@ paths:
       summary: 借书删除
       tags:
       - 借书方法
-  /api/borrow_list:
+  /borrow_list:
     get:
       parameters:
       - description: page
@@ -302,7 +302,7 @@ paths:
       summary: 借书列表
       tags:
       - 借书方法
-  /api/category_create:
+  /category_create:
     post:
       parameters:
       - description: name
@@ -322,7 +322,7 @@ paths:
       summary: 添加分类
       tags:
       - 分类方法
-  /api/category_delete:
+  /category_delete:
     delete:
       parameters:
       - description: id
@@ -338,7 +338,7 @@ paths:
       summary: 分类删除
       tags:
       - 分类方法
-  /api/category_detail:
+  /category_detail:
     get:
       parameters:
       - description: id
@@ -354,7 +354,7 @@ paths:
       summary: 分类详细
       tags:
       - 分类方法
-  /api/category_list:
+  /category_list:
     get:
       parameters:
       - description: page
@@ -377,7 +377,7 @@ paths:
       summary: 分类列表
       tags:
       - 分类方法
-  /api/category_update:
+  /category_update:
     put:
       parameters:
       - description: id
@@ -401,7 +401,7 @@ paths:
       summary: 分类修改
       tags:
       - 分类方法
-  /api/code:
+  /code:
     post:
       parameters:
       - description: email
@@ -416,7 +416,7 @@ paths:
       summary: 发送邮箱验证码
       tags:
       - 管理员方法
-  /api/echart_data:
+  /echart_data:
     get:
       responses:
         "200":
@@ -426,7 +426,7 @@ paths:
       summary: echarts数据
       tags:
       - echarts数据
-  /api/login:
+  /login:
     post:
       parameters:
       - description: name
@@ -445,7 +445,7 @@ paths:
       summary: 管理员登录
       tags:
       - 管理员方法
-  /api/register:
+  /register:
     post:
       parameters:
       - description: name
@@ -485,7 +485,7 @@ paths:
       summary: 管理员注册
       tags:
       - 管理员方法
-  /api/retur_create:
+  /retur_create:
     post:
       parameters:
       - description: book_id
@@ -526,7 +526,7 @@ paths:
       summary: 还书创建
       tags:
       - 还书方法
-  /api/retur_delete:
+  /retur_delete:
     delete:
       parameters:
       - description: id
@@ -542,7 +542,7 @@ paths:
       summary: 还书删除
       tags:
       - 还书方法
-  /api/retur_list:
+  /retur_list:
     get:
       parameters:
       - description: page
@@ -573,7 +573,7 @@ paths:
       summary: 还书列表
       tags:
       - 还书方法
-  /api/user_account:
+  /user_account:
     post:
       parameters:
       - description: id
@@ -594,7 +594,7 @@ paths:
       summary: 账号充值
       tags:
       - 用户方法
-  /api/user_create:
+  /user_create:
     post:
       parameters:
       - description: name
@@ -629,7 +629,7 @@ paths:
       summary: 用户注册
       tags:
       - 用户方法
-  /api/user_delete:
+  /user_delete:
     delete:
       parameters:
       - description: id
@@ -645,7 +645,7 @@ paths:
       summary: 用户删除
       tags:
       - 用户方法
-  /api/user_detail:
+  /user_detail:
     get:
       parameters:
       - description: id
@@ -661,7 +661,7 @@ paths:
       summary: 用户详细
       tags:
       - 用户方法
-  /api/user_list:
+  /user_list:
     get:
       parameters:
       - description: page
@@ -688,7 +688,7 @@ paths:
       summary: 用户列表
       tags:
       - 用户方法
-  /api/user_update:
+  /user_update:
     put:
       parameters:
       - description: id
