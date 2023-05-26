@@ -24,9 +24,10 @@ func Cors() gin.HandlerFunc {
 }
 
 func Router() *gin.Engine {
-	router := gin.Default()
+	r := gin.Default()
 	//跨域
-	router.Use(Cors())
+	r.Use(Cors())
+	router := r.Group("/api")
 	//swagger调试
 	docs.SwaggerInfo.BasePath = ""
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
@@ -68,5 +69,5 @@ func Router() *gin.Engine {
 	router.DELETE("/retur_delete", services.ReturDelete)
 	//主页echarts数据
 	router.GET("/echart_data", services.EchartsData)
-	return router
+	return r
 }
