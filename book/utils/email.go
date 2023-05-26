@@ -18,7 +18,7 @@ func SendCode(toUserEmail, code string) error {
 	e.Text = []byte("Text Body is, of course, supported!")
 	e.HTML = []byte(fmt.Sprintf("<h1>验证码为:%s,有效时间5分钟</h1>", code))
 	return e.SendWithTLS("smtp.163.com:465",
-		smtp.PlainAuth("", "lly123good@163.com", "IECEMXLPGHYYATCR", "smtp.163.com"),
+		smtp.PlainAuth("", "lly123good@163.com", "改为自己的（Change to your own）", "smtp.163.com"),
 		&tls.Config{InsecureSkipVerify: true, ServerName: "smtp.163.com"})
 }
 
