@@ -117,7 +117,7 @@ func GetBookList(c *gin.Context) {
 		Size   string `form:"size" json:"size"`
 		Page   string `form:"page" json:"page"`
 		Name   string `form:"name" json:"name"`
-		BookNo string `form:"bookNo" json:"bookNo"`
+		BookNo string `form:"id" json:"id"`
 	}
 	data := _param{
 		Size: config.DefaultSize,

@@ -1,3 +1,54 @@
 [2023-05-26 13:04:14] [36m[info][0m retur.go:90 book/services.GetReturList enter
 [2023-05-26 13:04:14] [36m[info][0m retur.go:116 book/services.GetReturList getting data
 [2023-05-26 13:04:14] [36m[info][0m retur.go:128 book/services.GetReturList return
+[2023-05-26 21:31:14] [36m[info][0m admin.go:186 book/services.Login enter
+[2023-05-26 21:31:14] [36m[info][0m admin.go:197 book/services.Login getting data
+[2023-05-26 21:31:14] [36m[info][0m admin.go:225 book/services.Login return
+[2023-05-26 21:31:14] [36m[info][0m home.go:16 book/services.EchartsData enter
+[2023-05-26 21:31:14] [36m[info][0m home.go:23 book/services.EchartsData getting data
+[2023-05-26 21:31:14] [36m[info][0m home.go:80 book/services.EchartsData return
+[2023-05-26 21:31:18] [36m[info][0m user.go:66 book/services.GetUserList enter
+[2023-05-26 21:31:18] [36m[info][0m user.go:91 book/services.GetUserList getting data
+[2023-05-26 21:31:18] [36m[info][0m user.go:103 book/services.GetUserList return
+[2023-05-26 21:31:19] [36m[info][0m user.go:66 book/services.GetUserList enter
+[2023-05-26 21:31:19] [36m[info][0m user.go:91 book/services.GetUserList getting data
+[2023-05-26 21:31:19] [36m[info][0m user.go:103 book/services.GetUserList return
+[2023-05-26 21:31:19] [36m[info][0m home.go:16 book/services.EchartsData enter
+[2023-05-26 21:31:19] [36m[info][0m home.go:23 book/services.EchartsData getting data
+[2023-05-26 21:31:19] [36m[info][0m home.go:80 book/services.EchartsData return
+[2023-05-26 21:31:24] [36m[info][0m admin.go:186 book/services.Login enter
+[2023-05-26 21:31:24] [36m[info][0m admin.go:197 book/services.Login getting data
+[2023-05-26 21:31:24] [36m[info][0m admin.go:225 book/services.Login return
+[2023-05-26 21:31:24] [36m[info][0m home.go:16 book/services.EchartsData enter
+[2023-05-26 21:31:24] [36m[info][0m home.go:23 book/services.EchartsData getting data
+[2023-05-26 21:31:24] [36m[info][0m home.go:80 book/services.EchartsData return
+[2023-05-26 21:31:29] [36m[info][0m user.go:66 book/services.GetUserList enter
+[2023-05-26 21:31:29] [36m[info][0m user.go:91 book/services.GetUserList getting data
+[2023-05-26 21:31:29] [36m[info][0m user.go:103 book/services.GetUserList return
+[2023-05-26 21:31:31] [36m[info][0m admin.go:245 book/services.GetAdminList enter
+[2023-05-26 21:31:31] [36m[info][0m admin.go:266 book/services.GetAdminList getting data
+[2023-05-26 21:31:31] [36m[info][0m admin.go:284 book/services.GetAdminList return
+[2023-05-26 21:31:32] [36m[info][0m category.go:60 book/services.GetCategoryList enter
+[2023-05-26 21:31:32] [36m[info][0m category.go:84 book/services.GetCategoryList getting data
+[2023-05-26 21:31:32] [36m[info][0m category.go:96 book/services.GetCategoryList return
+[2023-05-26 21:31:36] [36m[info][0m category.go:60 book/services.GetCategoryList enter
+[2023-05-26 21:31:36] [36m[info][0m category.go:84 book/services.GetCategoryList getting data
+[2023-05-26 21:31:36] [36m[info][0m category.go:96 book/services.GetCategoryList return
+[2023-05-26 21:31:37] [36m[info][0m category.go:60 book/services.GetCategoryList enter
+[2023-05-26 21:31:37] [36m[info][0m category.go:84 book/services.GetCategoryList getting data
+[2023-05-26 21:31:37] [36m[info][0m category.go:96 book/services.GetCategoryList return
+[2023-05-26 21:31:37] [36m[info][0m book.go:115 book/services.GetBookList enter
+[2023-05-26 21:31:37] [36m[info][0m book.go:140 book/services.GetBookList getting data
+[2023-05-26 21:31:37] [36m[info][0m book.go:151 book/services.GetBookList return
+[2023-05-26 21:31:40] [36m[info][0m book.go:115 book/services.GetBookList enter
+[2023-05-26 21:31:40] [36m[info][0m user.go:66 book/services.GetUserList enter
+[2023-05-26 21:31:40] [36m[info][0m book.go:140 book/services.GetBookList getting data
+[2023-05-26 21:31:40] [36m[info][0m user.go:91 book/services.GetUserList getting data
+[2023-05-26 21:31:40] [36m[info][0m user.go:103 book/services.GetUserList return
+[2023-05-26 21:31:40] [36m[info][0m book.go:151 book/services.GetBookList return
+[2023-05-26 21:31:41] [36m[info][0m borrow.go:100 book/services.GetBorrowList info
+[2023-05-26 21:31:41] [36m[info][0m borrow.go:126 book/services.GetBorrowList getting data
+[2023-05-26 21:31:41] [36m[info][0m borrow.go:138 book/services.GetBorrowList return
+[2023-05-26 21:31:43] [36m[info][0m retur.go:90 book/services.GetReturList enter
+[2023-05-26 21:31:43] [36m[info][0m retur.go:116 book/services.GetReturList getting data
+[2023-05-26 21:31:43] [36m[info][0m retur.go:128 book/services.GetReturList return

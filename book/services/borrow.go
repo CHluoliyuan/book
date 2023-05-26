@@ -65,8 +65,8 @@ func BorrowCreate(c *gin.Context) {
 		})
 		return
 	}
-	err = tx.Updates(&user).Error
-	err = tx.Updates(&book).Error
+	err = tx.Select("account").Updates(&user).Error
+	err = tx.Select("nums").Updates(&book).Error
 	if err != nil {
 		utils.Log.Errorln("get data error")
 		tx.Rollback()
